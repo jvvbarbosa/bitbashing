@@ -210,6 +210,28 @@ int write_output(DECODE_BLOCK * block, char *filename, int nwords){
 	fputc(block->bits[nbits-1], f);
 }
 
+int write_output_words(DECODE_BLOCK * block, char *filename, int nwords){
+	
+	FILE *f;
+
+	if(nwords > block->nwords)
+		return -1;
+	f = fopen(filename, "w");
+
+	if( f == NULL){
+		perror("Could not open file: ");
+		return -1;
+	}
+	
+	
+	int i;
+	for(i = 0; i < nwords - 1; ++i){
+		fprintf(f, "%03x", block->words[i]);
+		fputc(',', f);
+	}	
+		fprintf(f, "%03x", block->words[nwords-1]);
+}
+
 int main(int argc, char *argv[]){
 
 	unsigned int word_size = 12; //default value	
@@ -306,6 +328,12 @@ int main(int argc, char *argv[]){
 	}else{
 		err = write_output(block, "output.csv", block->nwords);	
 	}
+
+	if(err){
+		fprintf(stderr, "Error occured while building %s.\n", savefile);
+	}
+
+	err = write_output_words(block, "output_words.csv", block->nwords);
 
 
 	exit(0);
