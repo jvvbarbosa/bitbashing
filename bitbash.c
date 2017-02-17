@@ -59,13 +59,16 @@ int build_bit_char_array(DECODE_BLOCK *block, unsigned int start_word, unsigned 
 	unsigned int bit = 0;
 	unsigned word = 0;
 	unsigned int shift;
+	unsigned int nbits = nwords*block->word_size;
+	int i =0;
 
-	for(word = 0; word < nwords; ++word){
+	for(bit = 0; bit < nbits; ++bit){
 		byte_idx = bit_idx >> 3u;
 		shift = bit_idx & 7u;
-		block->bits[bit++] = (block->raw_data[byte_idx] >> shift) & 0x1;
+		block->bits[bit] = (block->raw_data[byte_idx] >> shift) & 0x1;
 		bit_idx++;
 	}
+	printf("\n");
 	return 0;
 } 
 
@@ -339,6 +342,10 @@ int main(int argc, char *argv[]){
 
 	err = write_output_words(block, "output_words.csv", block->nwords);
 
+	int i;
+	for(i = 0; i < block->nbits; ++i)
+		printf("%d ", block->bits[i]);
+	printf("\n");
 
 	exit(0);
 
