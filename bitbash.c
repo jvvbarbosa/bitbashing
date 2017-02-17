@@ -125,7 +125,7 @@ DECODE_BLOCK * create_decode_block(char *filename, unsigned int word_size){
 	long start_ptr;
 	unsigned long data_size;
 
-	if(word_size = 0)
+	if(word_size == 0)
 		return NULL;
 
 	f = fopen(filename, "r");
@@ -204,10 +204,12 @@ int write_output(DECODE_BLOCK * block, char *filename, int nwords){
 	
 	int i;
 	for(i = 0; i < nbits - 1; ++i){
-		fputc(block->bits[i], f);
+		fputc(block->bits[i]+'0', f);
 		fputc(',', f);
 	}	
 	fputc(block->bits[nbits-1], f);
+
+	return 0;
 }
 
 int write_output_words(DECODE_BLOCK * block, char *filename, int nwords){
@@ -230,6 +232,8 @@ int write_output_words(DECODE_BLOCK * block, char *filename, int nwords){
 		fputc(',', f);
 	}	
 		fprintf(f, "%03x", block->words[nwords-1]);
+
+	return 0;
 }
 
 int main(int argc, char *argv[]){
